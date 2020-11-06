@@ -1,0 +1,11 @@
+#!/bin/bash
+
+command="/home/samy/.local/share/gnome-shell/extensions/gsconnect@andyholmes.github.io/service/daemon.js -d $(gsc-id) --notification-appname=Apt --notification-id=5397 --notification=Update"
+
+$(${command} --notification-body "Launching updates...")
+
+sudo apt update && sudo apt upgrade
+sudo apt autoremove
+sudo apt autoclean
+
+$(${command} --notification-body "Updated successfully")
