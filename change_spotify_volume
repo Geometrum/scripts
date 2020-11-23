@@ -1,0 +1,33 @@
+#!/usr/bin/python3
+
+import sys
+from subprocess import check_output, run
+
+def get_sink_number():
+    out = check_output(['pacmd', 'list-sink-inputs']).decode('utf-8')
+    sink_number = None
+
+    for sink in out.split('index: '):
+        if 'spotify' in sink:
+            sink_number = sink.split("\n")[0]
+            break
+
+    return sink_number
+
+
+def control_volume(volume_percent):
+    num = get_sink_number()
+
+    if not num:
+        print('No running Spotify instance found')
+        return
+
+    run(['pactl', 'set-sink-input-volume', num, volume_percent])
+
+
+if __name__ == "__main__":
+    if len(sys.argv) != 2:
+        print('Require volume argument')
+        exit()
+
+    control_volume(sys.argv[1])
